@@ -1,0 +1,115 @@
+/* src/components/Navbar.css */
+
+/* --- MAIN NAVBAR CONTAINER --- */
+.navbar {
+  width: 100%;
+  padding: 1.5rem 2rem;
+  background: transparent; /* Transparent to show the blobs behind it */
+  position: absolute;      /* Sits on top of the hero section */
+  top: 0;
+  left: 0;
+  z-index: 50;             /* Ensures it stays above everything */
+  background-color: #ffffff;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- LOGO / BRAND --- */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  color: #1f2937; /* Dark Grey */
+  font-size: 1.3rem;
+  letter-spacing: -0.5px;
+  transition: opacity 0.2s;
+}
+
+.nav-brand:hover {
+  opacity: 0.8;
+}
+
+.logo-circle-nav {
+  width: 36px;
+  height: 36px;
+  background: var(--primary); /* Uses the Indigo color from App.css */
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(95, 77, 199, 0.2);
+}
+
+/* --- RIGHT SIDE ACTIONS --- */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 2rem; /* Space between Login and Get Started */
+}
+
+/* Log In Link */
+.nav-link {
+  text-decoration: none;
+  color: #4b5563; /* Slate 600 */
+  font-weight: 600;
+  font-size: 1rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--primary); /* Turns Indigo on hover */
+}
+
+/* Get Started Button (Pill Shape) */
+.nav-btn-primary {
+  text-decoration: none;
+  background: var(--primary);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 50px; /* Pill shape */
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(95, 77, 199, 0.2);
+}
+
+.nav-btn-primary:hover {
+  transform: translateY(-2px);
+  background-color: #4f40a8; /* Slightly darker indigo */
+  box-shadow: 0 8px 15px rgba(95, 77, 199, 0.3);
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .nav-brand span {
+    display: none; /* Hide text on very small screens, keep logo */
+  }
+
+  .logo-circle-nav {
+    display: flex; /* Ensure logo is visible */
+  }
+
+  .nav-actions {
+    gap: 1rem;
+  }
+
+  .nav-btn-primary {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

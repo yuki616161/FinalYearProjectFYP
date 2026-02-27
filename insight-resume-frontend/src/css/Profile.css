@@ -1,0 +1,227 @@
+/* src/css/Profile.css */
+
+/* --- LAYOUT CONFIG --- */
+.profile-page {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #0f172a;
+}
+
+/* --- HEADER --- */
+.page-header-simple {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.page-header-simple h1 {
+  font-size: 1.8rem;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.page-header-simple p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Edit/Save Button */
+.btn-header {
+  background: white;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.btn-header:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* When in "Save" mode (Active) */
+.btn-save-mode {
+  background: #2563eb; /* Royal Blue */
+  color: white;
+  border-color: #2563eb;
+}
+
+.btn-save-mode:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* --- SPLIT LAYOUT --- */
+.profile-split-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* --- LEFT: SIDEBAR CARD --- */
+.profile-sidebar {
+  position: sticky;
+  top: 90px; /* Stick below navbar */
+}
+
+.user-card-static {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.avatar-big {
+  width: 100px;
+  height: 100px;
+  background: #2563eb; /* Royal Blue */
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.static-name {
+  margin: 0 0 5px 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.static-role {
+  margin: 0 0 25px 0;
+  color: #64748b;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.static-meta {
+  border-top: 1px solid #f1f5f9;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.meta-row svg { color: #94a3b8; }
+
+/* --- RIGHT: FORM AREA --- */
+.profile-form-area {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.form-section h3 {
+  margin: 0 0 25px 0;
+  font-size: 1.1rem;
+  color: #0f172a;
+  font-weight: 700;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 15px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 8px; }
+.form-group.full-width { grid-column: span 2; }
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Input Wrapper for Icons */
+.input-wrap { position: relative; display: flex; align-items: center; }
+
+.input-wrap svg {
+  position: absolute;
+  left: 12px;
+  width: 18px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+/* Inputs & Textareas */
+.input-wrap input, textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #0f172a;
+  background: #fff;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.input-wrap input { padding: 10px 12px 10px 40px; /* Space for icon */ }
+textarea { padding: 12px; }
+
+/* Disabled State = "Read Only" Look */
+input:disabled, textarea:disabled {
+  background: #f8fafc; /* Very light gray */
+  color: #475569;
+  border-color: #e2e8f0;
+  cursor: default;
+}
+
+/* Focus State */
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #2563eb; /* Royal Blue */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.helper-text { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .profile-split-layout { grid-template-columns: 1fr; }
+  .profile-sidebar { position: static; margin-bottom: 20px; }
+}
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full-width { grid-column: span 1; }
+  .page-header-simple { flex-direction: column; align-items: flex-start; gap: 15px; }
+}

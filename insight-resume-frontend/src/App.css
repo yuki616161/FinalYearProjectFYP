@@ -1,0 +1,15 @@
+/* Ensure the normal app container is centered and limited */
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+  /* padding: 20px; <--- Optional, depending on your design */
+}
+
+/* Ensure the admin container takes full space */
+.full-width-container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}

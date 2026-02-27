@@ -1,0 +1,144 @@
+/* src/LandingPage.css */
+
+/* --- PAGE LAYOUT --- */
+.landing-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #f8fafc;
+  overflow-x: hidden;
+  display: flex; flex-direction: column;
+}
+
+.landing-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 8rem; padding-bottom: 4rem;
+}
+
+/* --- 1. TECH GRID BACKGROUND --- */
+.grid-background {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-image:
+    linear-gradient(#e5e7eb 1px, transparent 1px),
+    linear-gradient(90deg, #e5e7eb 1px, transparent 1px);
+  background-size: 40px 40px; opacity: 0.4; z-index: 0;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+}
+
+/* --- 2. SOFT BLOBS (Updated Colors) --- */
+.bg-blob {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  filter: blur(120px); opacity: 0.15; z-index: 0;
+}
+/* Replaced Purple with Blue Hues */
+.blob-purple { background: #93c5fd; top: -150px; left: 0; }
+.blob-indigo { background: #2563eb; top: 20%; right: -100px; }
+
+/* --- HEADER --- */
+.landing-header { text-align: center; max-width: 800px; padding: 0 1rem; margin-bottom: 3.5rem; }
+
+.pill-badge {
+  display: inline-block; background: white; border: 1px solid #e5e7eb;
+  padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; font-weight: 700;
+  color: #2563eb; /* Royal Blue */
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.landing-header h1 {
+  font-size: 3rem; font-weight: 800; color: #111827;
+  margin-bottom: 1rem; line-height: 1.1; letter-spacing: -1px;
+}
+
+.highlight-text { color: #2563eb; position: relative; } /* Royal Blue */
+.highlight-text::after {
+  content: ""; position: absolute; bottom: 8px; left: 0; width: 100%; height: 12px;
+  background: #bfdbfe; /* Light Blue Highlight */
+  opacity: 0.4; z-index: -1; border-radius: 4px;
+}
+
+.landing-header p { font-size: 1.2rem; color: #6b7280; line-height: 1.6; max-width: 650px; margin: 0 auto; }
+
+/* --- HERO WRAPPER --- */
+.hero-wrapper { position: relative; width: 90%; max-width: 750px; margin-bottom: 5rem; }
+
+/* FLOATING BADGES */
+.floating-badge {
+  position: absolute; background: white; padding: 12px 20px; border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 12px;
+  z-index: 3; border: 1px solid white; animation: float 6s ease-in-out infinite;
+}
+.badge-left { top: 30px; left: -80px; animation-delay: 0s; }
+.badge-right { bottom: 50px; right: -80px; animation-delay: 3s; }
+
+.badge-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.icon-yellow { background: #fef3c7; color: #d97706; }
+.icon-green { background: #dcfce7; color: #059669; }
+
+.badge-title { display: block; font-size: 0.85rem; font-weight: 700; color: #1f2937; }
+.badge-sub { display: block; font-size: 0.75rem; color: #6b7280; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+/* --- UPLOAD CARD --- */
+.upload-hero-card {
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(12px);
+  border-radius: 24px; padding: 4rem 2rem; text-align: center;
+  box-shadow: 0 25px 60px -15px rgba(37, 99, 235, 0.2); /* Blue Shadow */
+  border: 2px dashed #cbd5e1;
+  cursor: pointer; transition: all 0.3s ease;
+}
+.upload-hero-card:hover {
+  border-color: #2563eb; transform: translateY(-5px); background: white;
+  box-shadow: 0 35px 70px -15px rgba(37, 99, 235, 0.3);
+}
+
+.icon-circle-large {
+  width: 80px; height: 80px;
+  background: #eff6ff; color: #2563eb; /* Blue Icon Bg */
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.upload-hero-card h2 { font-size: 2rem; margin-bottom: 0.5rem; color: #1f2937; }
+.upload-instruction { font-size: 1.1rem; color: #6b7280; margin-bottom: 2rem; }
+
+.btn-cta-primary {
+  background: #2563eb; color: white; border: none; padding: 16px 48px;
+  border-radius: 50px; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); transition: all 0.2s;
+}
+.btn-cta-primary:hover { transform: scale(1.05); background: #1d4ed8; }
+.upload-meta { margin-top: 1.5rem; font-size: 0.85rem; color: #9ca3af; }
+
+/* --- FEATURES GRID --- */
+.features-section { width: 90%; max-width: 1100px; text-align: center; }
+.section-title { font-size: 2rem; color: #1f2937; margin-bottom: 3rem; }
+
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+
+.feature-card {
+  background: white; padding: 2rem; border-radius: 20px; text-align: left;
+  border: 1px solid #f3f4f6; transition: transform 0.2s;
+}
+.feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+.feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+
+/* Feature Icons (Replaced Indigo with Blue) */
+.icon-indigo { background: #eff6ff; color: #2563eb; } /* Was Indigo */
+.icon-red { background: #fee2e2; color: #dc2626; }
+.icon-green { background: #dcfce7; color: #059669; }
+
+.feature-card h3 { font-size: 1.25rem; margin-bottom: 0.8rem; color: #111827; }
+.feature-card p { font-size: 1rem; color: #6b7280; line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .hero-wrapper { width: 100%; }
+  .floating-badge { display: none; }
+  .features-grid { grid-template-columns: 1fr; }
+}

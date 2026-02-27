@@ -1,0 +1,145 @@
+/* src/css/DashboardNavbar.css */
+
+.dash-navbar {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+
+/* ✅ make navbar padding same “container style” */
+.dash-nav-container {
+  width: min(1200px, 100%);       /* ✅ MATCH Dashboard main-content width */
+  margin: 0 auto;
+  padding: 0 1.25rem;             /* ✅ same side padding as main-content */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* LOGO */
+.dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-circle-small {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: white;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.brand-text-dark {
+  font-weight: 900;
+  color: #0f172a;
+  font-size: 1.05rem;
+  letter-spacing: -0.2px;
+}
+
+/* LINKS */
+.dash-links {
+  display: flex;
+  gap: 1.75rem;
+  align-items: center;
+}
+
+.dash-link {
+  text-decoration: none;
+  color: #64748b;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 22px 0;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.dash-link:hover {
+  color: #2563eb;
+}
+
+.dash-link.active-link {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+/* RIGHT SECTION */
+.dash-profile-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-pill-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.user-pill-link:hover .user-pill {
+  background: #eff6ff;
+  border-color: rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.avatar-small {
+  width: 28px;
+  height: 28px;
+  background: #2563eb;
+  color: white;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #334155;
+}
+
+.btn-logout-text {
+  text-decoration: none;
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.btn-logout-text:hover {
+  text-decoration: underline;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .dash-links {
+    display: none;
+  }
+}
