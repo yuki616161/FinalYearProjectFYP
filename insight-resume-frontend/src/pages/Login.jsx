@@ -1,9 +1,10 @@
 // src/pages/Login.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import '../css/Auth.css'; // <--- VERIFY THIS PATH IS CORRECT
+import { supabase } from '../supabaseClient'; // Make sure this path is correct!
+import '../css/Auth.css';
 
-// Icons
+// --- ICONS ---
 const MailIcon = () => (
   <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
 );
@@ -20,12 +21,55 @@ const EyeOffIcon = () => (
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const navigate = useNavigate();
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError(''); // Clear error when user starts typing again
+  };
+
+  // ---> THIS IS THE UPDATED LOGIN LOGIC <---
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate('/dashboard');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // 1. Log in with Supabase Auth
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+
+      // 2. Fetch the user's role from the 'profiles' table
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', authData.user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      // 3. Save the role to localStorage so your Navbar and other pages know who is logged in
+      localStorage.setItem('userRole', profileData.role);
+
+      // 4. Redirect them to the correct dashboard based on their role!
+      if (profileData.role === 'Admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -36,7 +80,7 @@ function Login() {
       {/* 2. The White Card */}
       <div className="auth-card">
 
-        {/* Purple Logo Box */}
+        {/* Logo Box */}
         <div className="brand-logo">
           <div className="logo-circle">IR</div>
         </div>
@@ -88,14 +132,21 @@ function Login() {
             <div style={{ textAlign: 'right', marginTop: '10px' }}>
               <Link
                 to="/forgot-password"
-                style={{ fontSize: '0.9rem', color: '#5f4dc7', fontWeight: '600', textDecoration: 'none' }}
+                style={{ fontSize: '0.9rem', color: '#2563eb', fontWeight: '600', textDecoration: 'none' }}
               >
                 Forgot Password?
               </Link>
             </div>
           </div>
 
-          <button type="submit" className="auth-btn">Sign In</button>
+          {/* Error Message Display */}
+          {error && <div className="error-box" style={{color: '#dc2626', backgroundColor: '#fee2e2', padding: '10px', borderRadius: '8px', marginBottom: '15px', fontSize: '0.9rem', fontWeight: '600'}}>
+            ⚠️ {error}
+          </div>}
+
+          <button type="submit" className="auth-btn" disabled={isLoading}>
+            {isLoading ? "Signing In..." : "Sign In"}
+          </button>
         </form>
 
         <div className="auth-footer">
