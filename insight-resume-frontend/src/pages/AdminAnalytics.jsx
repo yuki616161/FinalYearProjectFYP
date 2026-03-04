@@ -1,5 +1,7 @@
+// src/pages/AdminAnalytics.jsx
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from '../supabaseClient';
 import AnalysisInspector from "../components/AnalysisInspector";
 import "../css/AdminDashboard.css";
 
@@ -11,30 +13,85 @@ const FilterIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="n
 const LogOutIcon = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>;
 
 function AdminAnalytics() {
+  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedScan, setSelectedScan] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // MOCK DATA
   useEffect(() => {
-    setLogs([
-      { id: 205, user: "Yon Yu Ki", job_role: "Software Engineer", date: "2025-12-12 10:30 AM", score: 85, extracted_skills: "React, Node.js", education: "BSc CS", status: "Verified" },
-      { id: 204, user: "Sarah Tan", job_role: "Data Analyst", date: "2025-12-12 09:15 AM", score: 62, extracted_skills: "Python, SQL", education: "BSc Data Science", status: "Flagged" },
-      { id: 203, user: "Ali Bin Abu", job_role: "Project Manager", date: "2025-12-11 04:45 PM", score: 45, extracted_skills: "Agile, Jira", education: "MBA", status: "Verified" },
-      { id: 202, user: "John Doe", job_role: "Software Engineer", date: "2025-12-11 02:20 PM", score: 78, extracted_skills: "Java, Spring", education: "BSc IT", status: "Verified" },
-    ]);
+    fetchSystemLogs();
   }, []);
 
+  // 1. FETCH LIVE SYSTEM LOGS
+  async function fetchSystemLogs() {
+    try {
+      setLoading(true);
+
+      // Fetch all analysis records
+      const { data: historyData, error: historyError } = await supabase
+        .from('analysis_history')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (historyError) throw historyError;
+
+      // Fetch profiles to get the users' names
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name');
+
+      if (profilesError) throw profilesError;
+
+      // Merge the data sets
+      const mergedLogs = historyData.map(log => {
+        const userProfile = profilesData.find(p => p.id === log.user_id);
+        const userName = userProfile
+          ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim()
+          : "Unknown Student";
+
+        return {
+          ...log,
+          userName,
+          // Convert the PostgreSQL array into a readable string
+          extracted_skills: log.strengths ? log.strengths.join(", ") : "No skills detected"
+        };
+      });
+
+      setLogs(mergedLogs);
+    } catch (err) {
+      console.error("Error fetching logs:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 2. SEARCH FILTER (By name, role, or skills)
+  const filteredLogs = logs.filter(log =>
+    log.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.target_role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    log.extracted_skills.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // 3. OPEN INSPECTOR MODAL
   const openInspector = (log) => {
     setSelectedScan({
-      user: { name: log.user },
+      user: { name: log.userName },
+      // Pass the full log object so the modal can read strengths, gaps, and recommendations
       history: [log]
     });
+  };
+
+  // 4. SIGN OUT
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/login');
   };
 
   return (
     <div className="admin-layout">
 
-      {/* --- SIDEBAR (Fixed: Links Added) --- */}
+      {/* --- SIDEBAR --- */}
       <aside className="admin-sidebar">
         <div className="sidebar-header">
           <div className="brand-logo">IR</div>
@@ -43,22 +100,18 @@ function AdminAnalytics() {
 
         <nav className="sidebar-menu">
           <div className="menu-category">MAIN</div>
-
-          {/* Link to Users (Inactive style) */}
           <Link to="/admin" className="menu-item">
             <UsersIcon /> Users
           </Link>
-
-          {/* Link to Analytics (ACTIVE style) */}
           <Link to="/admin/analytics" className="menu-item active">
             <ActivityIcon /> Analytics
           </Link>
         </nav>
 
         <div className="sidebar-footer">
-          <Link to="/" className="menu-item logout">
+          <button className="menu-item logout" onClick={handleSignOut} style={{ background: 'none', border: 'none', width: '100%', textAlign: 'left', cursor: 'pointer' }}>
             <LogOutIcon /> Sign Out
-          </Link>
+          </button>
         </div>
       </aside>
 
@@ -79,8 +132,10 @@ function AdminAnalytics() {
                   <SearchIcon style={{position:'absolute', left:'10px', color:'#9ca3af'}} />
                   <input
                     type="text"
-                    placeholder="Search logs..."
-                    style={{paddingLeft:'35px', paddingRight:'10px', height:'38px', borderRadius:'8px', border:'1px solid #e2e8f0'}}
+                    placeholder="Search logs or skills..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{paddingLeft:'35px', paddingRight:'10px', height:'38px', borderRadius:'8px', border:'1px solid #e2e8f0', outline:'none'}}
                   />
                </div>
                <button className="icon-btn" title="Filter"><FilterIcon /></button>
@@ -88,49 +143,62 @@ function AdminAnalytics() {
           </div>
 
           <div className="table-responsive">
-            <table className="modern-table">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>User</th>
-                  <th>Target Job Role</th>
-                  <th>Score</th>
-                  <th>Extracted Data (Preview)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map(log => (
-                  <tr key={log.id}>
-                    <td className="text-muted">{log.date}</td>
-                    <td className="font-medium">{log.user}</td>
-                    <td><span className="role-badge">{log.job_role}</span></td>
-                    <td>
-                      <span className={`score-badge ${log.score >= 70 ? 'high' : 'low'}`}>
-                        {log.score}
-                      </span>
-                    </td>
-                    <td style={{maxWidth: '300px'}} className="text-muted">
-                      <span className="truncate-text">{log.extracted_skills}</span>
-                    </td>
-                    <td>
-                      <button className="btn-secondary" style={{fontSize:'0.8rem', padding:'6px 12px'}} onClick={() => openInspector(log)}>
-                        Inspect
-                      </button>
-                    </td>
+            {loading ? (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>Loading system logs...</div>
+            ) : filteredLogs.length === 0 ? (
+               <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>No analysis records found.</div>
+            ) : (
+              <table className="modern-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Student</th>
+                    <th>Target Job Role</th>
+                    <th>Score</th>
+                    <th>Extracted Data (Preview)</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredLogs.map(log => (
+                    <tr key={log.id}>
+                      <td className="text-muted">
+                        {new Date(log.created_at).toLocaleDateString()}<br/>
+                        <span style={{fontSize: '0.75rem'}}>{new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      </td>
+                      <td className="font-medium">{log.userName}</td>
+                      <td><span className="role-badge">{log.target_role || "Unspecified"}</span></td>
+                      <td>
+                        <span className={`score-badge ${log.score >= 70 ? 'high' : 'low'}`} style={{ fontWeight: 'bold', color: log.score >= 70 ? '#16a34a' : '#ea580c' }}>
+                          {log.score}%
+                        </span>
+                      </td>
+                      <td style={{maxWidth: '300px'}} className="text-muted">
+                        <span className="truncate-text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'block' }}>
+                          {log.extracted_skills}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="btn-secondary" style={{fontSize:'0.8rem', padding:'6px 12px', border:'1px solid #e2e8f0', borderRadius:'6px', background:'white', cursor:'pointer'}} onClick={() => openInspector(log)}>
+                          Inspect
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 
         {/* INSPECTOR MODAL */}
-        <AnalysisInspector
-          user={selectedScan?.user}
-          history={selectedScan?.history}
-          onClose={() => setSelectedScan(null)}
-        />
+        {selectedScan && (
+          <AnalysisInspector
+            user={selectedScan.user}
+            history={selectedScan.history}
+            onClose={() => setSelectedScan(null)}
+          />
+        )}
 
       </main>
     </div>
