@@ -323,3 +323,79 @@
     display: block;
   }
 }
+
+/* --- VIEW REPORT / MODAL STYLES --- */
+
+/* 1. The dark semi-transparent background that covers the whole screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7); /* Deep slate with 70% opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Modern blur effect for the background */
+}
+
+/* 2. The actual white box containing the report data */
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow-y: auto; /* Adds scrollbar if content is too long */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* 3. The Close (X) button in the top right corner */
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--slate-400);
+}
+
+/* 4. Section for Professional Feedback / Recommendations */
+.report-section {
+  margin: 24px 0;
+  padding: 16px;
+  background: var(--slate-50);
+  border-radius: 12px;
+  border: 1px solid var(--slate-200);
+}
+
+/* 5. The two-column grid for Strengths and Gaps */
+.skills-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* 6. The individual tags for skills (Green for strengths, Red for gaps) */
+.skill-tag {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.skill-tag.strength {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.skill-tag.gap {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
